@@ -151,10 +151,10 @@ class historial(QMainWindow):
         #Procesar datos 
         data = QStandardItemModel()
         for columna in columnas:
-            item = {}
+            item = ""
             for posicion, nombre_columna in enumerate(cursor.description):
                 valor_columna = columna[posicion]
-                item[nombre_columna[0]] = valor_columna
+                item += ", " + str(valor_columna) if len(item) > 1 else str(valor_columna)
             data.appendRow(QStandardItem(str(item)))
 
         #Cargar modelo de datos en lista
