@@ -1,0 +1,12 @@
+QPushButton#ver_historial {
+    background-image: url("ui/icons/historial.png");
+}
+
+QListView#lista{
+    background-color: white;
+}
+
+QListView#lista::item {
+    padding: 5px;
+    font-size: 14px;
+}
