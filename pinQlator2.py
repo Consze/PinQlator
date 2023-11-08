@@ -131,34 +131,37 @@ class GUI(QMainWindow):
 #Historial
 class historial(QMainWindow):
     def __init__(self):
-        #Iniciar Ventana
-        super(historial,self).__init__()
-        ui_hist = uic.loadUi("ui/historial.ui",self)
-        self.setWindowTitle("Historial")
-        #CSS
-        css = "ui/estilo.css"
-        with open(css, "r") as f:
-            hoja_estilo = f.read()
-        ui_hist.setStyleSheet(hoja_estilo)
+        try:
+            #Iniciar Ventana
+            super(historial,self).__init__()
+            ui_hist = uic.loadUi("ui/historial.ui",self)
+            self.setWindowTitle("Historial")
+            #CSS
+            css = "ui/estilo.css"
+            with open(css, "r") as f:
+                hoja_estilo = f.read()
+            ui_hist.setStyleSheet(hoja_estilo)
 
-        #Conectar a db
-        conn = sqlite3.connect("datos.db")
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM resultados")
-        columnas = cursor.fetchall()
-        conn.close()
+            #Conectar a db
+            conn = sqlite3.connect("datos.db")
+            cursor = conn.cursor()
+            cursor.execute("SELECT resultado, computadora, fecha, hora FROM resultados")
+            columnas = cursor.fetchall()
+            conn.close()
 
-        #Procesar datos 
-        data = QStandardItemModel()
-        for columna in columnas:
-            item = ""
-            for posicion in enumerate(cursor.description):
-                valor_columna = columna[posicion]
-                item = ", " + str(valor_columna) if len(item) > 1 else str(valor_columna)
-            data.appendRow(QStandardItem(str(item)))
+            #Procesar datos
+            data = QStandardItemModel()
+            for columna in columnas:
+                item = ""
+                for posicion in enumerate(cursor.description):
+                    valor_columna = columna[posicion[0]]
+                    item += ", " + str(valor_columna) if len(item) > 0 else str(valor_columna)
+                data.appendRow(QStandardItem(str(item)))
 
-        #Cargar modelo de datos en lista
-        self.lista.setModel(data)
+            #Cargar modelo de datos en lista
+            self.lista.setModel(data)
+        except Exception as excepcion:
+            control_excepcion(excepcion,True)
 
 #Control de excepciones
 def control_excepcion(excepcion, borrar_llave):
